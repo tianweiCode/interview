@@ -1,5 +1,3 @@
-# interview
-A interview code repository
 interview answer
 =========
 
