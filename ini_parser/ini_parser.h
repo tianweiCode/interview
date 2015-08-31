@@ -2,17 +2,25 @@
 #define QIHOO_INI_PARSER_H_
 
 #include <string>
+#include <string.h>
 #include <vector>
 #include <map>
 #include <fcntl.h>
 #include <fstream>
-#include <string.h>
+#include <iostream>
+#include <functional>
+#include <iterator>
+
 
 
 namespace qh
 {
-	static const char defaultSection[] = "defaultSection";
-
+	static const char defaultSection[]   = "defaultSection";
+	static const char left_bracket_tag   = '[';
+	static const char right_bracket_tag	 = ']';
+	static const char newline            = '/n';
+	static const char comment_tag        = ';';
+	
 	class INIParser
 	{
 	public:
@@ -24,11 +32,11 @@ namespace qh
 		struct InitSection
 		{
 			// std::string section_name;
-			std::map<std::string, std::string> keyIntem;  // unordered_map
+			std::map< std::string, std::string > keyIntem;  // unordered_map
 			std::string comment;
 		};
 
-		typedef std::map < std::string, InitSection> Section;
+		typedef std::map < std::string, InitSection > Section;
 
     public:
         INIParser();
@@ -48,8 +56,10 @@ namespace qh
         //! \param[in] - size_t ini_data
         //! \param[in] - const std::string & line_seperator
         //! \param[in] - const std::string & key_value_seperator
+		//! \param[in] - const std::string & section_name    secion name， 如果未指定名字，使用默认名字"defaultSection"
         //! \return - bool
-		bool Parse(const char* ini_data, size_t ini_data_len, const std::string& line_seperator = "\n", const std::string& key_value_seperator = "=");
+		bool Parse(const char* ini_data, size_t ini_data_len, const std::string& line_seperator = "\n", const std::string& key_value_seperator = "=", const std::string& section_name = "defaultSection");
+
 
         //! \brief 从默认section中查找某个key，并返回找到的value。如果找不到，返回一个空串
         //! \param[in] - const std::string & key
@@ -60,10 +70,7 @@ namespace qh
         const std::string& Get(const std::string& section, const std::string& key, bool* found);
 
     private:
-
 		Section sections_;
-
-
 
 		//! \brief 去除字符串首尾的空格
 		//! \param[in] - std::string & str
@@ -73,16 +80,6 @@ namespace qh
 			str.erase(str.find_last_not_of(" ") + 1);
 		    str.erase(0, str.find_first_not_of(" "));
 		}
-
-
-
-		//! \brief 根据key_value_seperator的位置key_value_seperator_pos，从ini_data中解析key 和 value
-		//! \param[in] - const std::string & ini_data
-		//! \param[in] - const std::string & line_seperator
-		//! \param[in] - std::string & key   输出参数  关键字key
-		//! \param[in] - std::string & value 输出参数  key对应的value
-		//! \return - void
-
     };
 }
 

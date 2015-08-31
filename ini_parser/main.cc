@@ -95,6 +95,19 @@ void test5()
 	// const std::string& d = parser.Get("d", NULL);
 }
 
+void test6()
+{
+	qh::INIParser parser;
+	std::string str = "system.ini";
+	parser.Parse(str);
+	
+}
+
+
+
+
+
+
 int main(int argc, char* argv[])
 {
     //TODO 在这里添加单元测试，越多越好，代码路径覆盖率越全越好
@@ -103,7 +116,8 @@ int main(int argc, char* argv[])
     // test2();
     // test3();
 	// test4();
-	test5();
+	// test5();
+	test6();
 
 	getchar();
     return 0;
