@@ -1,0 +1,202 @@
+#ifndef QIHOO_VECTOR_H_
+#define QIHOO_VECTOR_H_
+
+#include <iostream>
+using namespace std;
+
+namespace qh
+{
+    template<class T>
+    class vector {
+	public:
+		static const size_t SPARE_SIZE = 10;
+
+    public:
+        //ctor
+        vector()
+			: data_(NULL), size_(0)
+        {
+
+        }
+
+        explicit vector( size_t n, const T& value = T())
+        {
+			size_     = n;
+			capacity_ = n + SPARE_SIZE;
+			data_ = new T[capacity_];
+            for (size_t i = 0; i < n; i++)
+            {
+                data_[i] = value;
+            }
+        }
+
+        vector<T>& operator=(const vector<T>& rhs)
+        {
+			if (this == &rhs)
+			{
+				return *this;
+			}
+			if (data_)
+			{
+				delete[] data_;
+			}
+			data_ = new T[rhs.capacity_];
+
+			for (size_t i = 0; i < rhs.size(); i++)
+			{
+				data_[i] = rhs.data_[i];
+			}
+			return *this;
+        }
+
+        //dtor
+        ~vector()
+        {
+            if (data_)
+            {
+                delete [] data_;
+				data_ = NULL;
+            }
+        }
+
+        //get
+        size_t size() const
+        {
+            return size_;
+        }
+
+        // set & get
+        T& operator[](size_t index);
+
+        // set
+        void push_back(const T& element);
+        void pop_back();
+		void resize(size_t new_size, const T& value);
+		void reserve(size_t new_capacity);
+        void clear();
+        bool empty();
+
+		// iterator
+
+    private:
+        T*      data_;
+        size_t  size_;
+		size_t  capacity_;
+
+    };
+
+	// set & get
+	template<class  T>
+	T& vector<T>::operator[](size_t index)
+	{
+	    return data_[index];
+	    /*
+		if (size_ > 0) {
+			if (index >= 0 && index < size_) {
+				return data_[index];
+			}
+			else
+			{
+				// throw exception("Out of range");
+			}
+		}
+		else
+		{
+			// throw exception("Out of range");
+		}
+		*/
+
+	}
+
+	// set
+	template<class  T>
+	void vector<T>::push_back(const T& element)
+	{
+		if (capacity_ == 0) {
+			capacity_ = SPARE_SIZE;
+			if (data_) {
+				delete[] data_;
+			}
+			data_ = new T[capacity_];
+			size_ = 0;
+		}
+		if (size_ == capacity_) {
+			reserve(2 * capacity_ + 1);
+		}
+		data_[size_++] = element;
+
+		// int i = size_ - 1;
+		// std::cout << "push_back: " << data_[i] << endl;
+	}
+
+	template<class  T>
+	void vector<T>::pop_back()
+	{
+		// If empty vector, then return
+		if (size() == 0) {
+			return;
+		}
+		--size_;
+		std::cout << "pop_back:  " << data_[size_] << endl;
+	}
+
+	template<class  T>
+	void vector<T>::resize(size_t new_size, const T& value)
+	{
+		if (new_size > size_) {
+			if (new_size > capacity_) {
+				reserve(2 * new_size + 1);
+			}
+		}
+
+		size_ = new_size;
+		for (size_t i = 0; i < size_; i++) {
+			data_[i] = value;
+		}
+
+		std::cout << "resize:  " << new_size << endl;
+	}
+
+	template<class  T>
+	void vector<T>::reserve(size_t new_capacity)
+	{
+		if (new_capacity <= capacity_) {
+			return;
+		}
+		T* old_data_ = data_;
+		data_ = new T[new_capacity];
+
+		for (size_t i = 0; i < size_; i++) {
+			data_[i] = old_data_[i];
+		}
+		capacity_ = new_capacity;
+		delete [] old_data_;
+
+		std::cout << "reserve:  " << new_capacity << endl;
+	}
+
+	template<class  T>
+	void vector<T>::clear()
+	{
+		if (size() == 0) {
+			return;
+		}
+
+		if (data_) {
+			delete[] data_;
+			data_ = NULL;
+		}
+		size_ = 0;
+		capacity_ = 0;
+	}
+
+	template<class  T>
+	bool vector<T>::empty()
+	{
+		return size() == 0;
+	}
+}
+
+#endif
+
+
