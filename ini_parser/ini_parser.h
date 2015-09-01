@@ -18,20 +18,14 @@ namespace qh
 	static const char defaultSection[]   = "defaultSection";
 	static const char left_bracket_tag   = '[';
 	static const char right_bracket_tag	 = ']';
-	static const char newline            = '/n';
+	static const char newline            = '\n';
 	static const char comment_tag        = ';';
-	
+
 	class INIParser
 	{
 	public:
-		/*struct keyIntem
-		{
-			std::string key;
-			std::string value;
-		};*/
 		struct InitSection
 		{
-			// std::string section_name;
 			std::map< std::string, std::string > keyIntem;  // unordered_map
 			std::string comment;
 		};
@@ -72,13 +66,15 @@ namespace qh
     private:
 		Section sections_;
 
-		//! \brief 去除字符串首尾的空格
+		//! \brief 去除字符串首尾的空格, '\r'
 		//! \param[in] - std::string & str
 		//! \return - void
 		inline void trimSpace(std::string &str)
 		{
 			str.erase(str.find_last_not_of(" ") + 1);
 		    str.erase(0, str.find_first_not_of(" "));
+		    str.erase(str.find_last_not_of("\r") + 1);
+		    str.erase(0, str.find_first_not_of("\r"));
 		}
     };
 }

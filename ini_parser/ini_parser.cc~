@@ -150,13 +150,11 @@ namespace qh
 	{
 		if (sections_.find(section_name) != sections_.end())
 		{
-		    *found = true;
 			return sections_[section_name].keyIntem[key];
 		}
 		else
 		{
-		    *found = false;
-			return sections_[section_name].keyIntem[key];
+			return NULLSTRING;
 		}
 	}
 
